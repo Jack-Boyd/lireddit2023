@@ -46,10 +46,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             sameSite: 'lax',
             secure: constants_1.__prod__,
         },
-        name: 'qid',
-        resave: false,
+        name: constants_1.COOKIE_NAME,
         store: redisStore,
-        saveUninitialized: false,
+        saveUninitialized: true,
+        resave: false,
         secret: "theonepieceisrealyohohohohohoho",
     }));
     const apolloServer = new server_1.ApolloServer({
@@ -59,7 +59,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         })
     });
     yield apolloServer.start();
-    app.use('/graphql', (0, cors_1.default)(), (0, body_parser_1.json)(), (0, express4_1.expressMiddleware)(apolloServer, {
+    app.use('/graphql', (0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }), (0, body_parser_1.json)(), (0, express4_1.expressMiddleware)(apolloServer, {
         context: ({ req, res }) => __awaiter(void 0, void 0, void 0, function* () { return ({ em: orm.em, req, res, token: req.headers.token }); }),
     }));
     app.listen(4000, () => {

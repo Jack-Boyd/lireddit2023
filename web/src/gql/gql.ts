@@ -14,13 +14,33 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "mutation Register($username: String!, $password: String!) {\n  register(options: {username: $username, password: $password}) {\n    errors {\n      field\n      message\n    }\n    user {\n      id\n      username\n    }\n  }\n}": types.RegisterDocument,
+    "fragment UserProps on User {\n  id\n  username\n}": types.UserPropsFragmentDoc,
+    "mutation Login($options: UsernamePasswordInput!) {\n  login(options: $options) {\n    user {\n      ...UserProps\n    }\n    errors {\n      field\n      message\n    }\n  }\n}": types.LoginDocument,
+    "mutation Logout {\n  logout\n}": types.LogoutDocument,
+    "mutation Register($username: String!, $password: String!) {\n  register(options: {username: $username, password: $password}) {\n    user {\n      ...UserProps\n    }\n    errors {\n      field\n      message\n    }\n  }\n}": types.RegisterDocument,
+    "query Me {\n  me {\n    ...UserProps\n  }\n}": types.MeDocument,
 };
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "mutation Register($username: String!, $password: String!) {\n  register(options: {username: $username, password: $password}) {\n    errors {\n      field\n      message\n    }\n    user {\n      id\n      username\n    }\n  }\n}"): typeof import('./graphql').RegisterDocument;
+export function graphql(source: "fragment UserProps on User {\n  id\n  username\n}"): typeof import('./graphql').UserPropsFragmentDoc;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation Login($options: UsernamePasswordInput!) {\n  login(options: $options) {\n    user {\n      ...UserProps\n    }\n    errors {\n      field\n      message\n    }\n  }\n}"): typeof import('./graphql').LoginDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation Logout {\n  logout\n}"): typeof import('./graphql').LogoutDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation Register($username: String!, $password: String!) {\n  register(options: {username: $username, password: $password}) {\n    user {\n      ...UserProps\n    }\n    errors {\n      field\n      message\n    }\n  }\n}"): typeof import('./graphql').RegisterDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query Me {\n  me {\n    ...UserProps\n  }\n}"): typeof import('./graphql').MeDocument;
 
 
 export function graphql(source: string) {

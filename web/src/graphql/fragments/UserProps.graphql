@@ -1,0 +1,4 @@
+fragment UserProps on User {
+  id
+  username
+}

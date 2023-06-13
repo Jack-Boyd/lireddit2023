@@ -2,6 +2,7 @@ import { User } from "../entities/User";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import argon2 from 'argon2';
+import { COOKIE_NAME } from "../constants";
 
 @InputType()
 class UsernamePasswordInput {
@@ -23,7 +24,6 @@ class FieldError {
 class UserResponse {
   @Field(() => [FieldError], {nullable: true})
   errors?: FieldError[];
-
   @Field(() => User, {nullable: true})
   user?: User;
 }
@@ -68,7 +68,7 @@ export class UserResolver {
     }
     
     req.session.userId = user.id;
-
+    
     return { user };
   };
 
@@ -91,4 +91,17 @@ export class UserResolver {
 
     return {user};
   };
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise(resolve => req.session.destroy(err => {
+      res.clearCookie(COOKIE_NAME);
+      if (err) {
+        console.log(err);
+        resolve(false);
+        return;
+      }
+      resolve(true);
+    }))
+  }
 };

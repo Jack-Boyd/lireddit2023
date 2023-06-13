@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import NavBar from '@/components/navbar'
 
 interface LayoutProps {
   children: ReactNode
@@ -7,11 +8,14 @@ interface LayoutProps {
 const Layout = (props: LayoutProps) => {
   const { children } = props;
   return (
-    <main className="flex justify-center h-screen">
-      <div className="w-full md:max-w-2xl">
-        {children}
-      </div>
-    </main>
+    <>
+      <NavBar/>
+      <main className="flex justify-center h-screen">    
+        <div className="w-full md:max-w-2xl">
+          {children}
+        </div>
+      </main>
+    </>
   );
 };
 

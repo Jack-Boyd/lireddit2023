@@ -27,6 +27,7 @@ export type Mutation = {
   createPost: Post;
   deletePost: Scalars['Boolean']['output'];
   login: UserResponse;
+  logout: Scalars['Boolean']['output'];
   register: UserResponse;
   updatePost: Post;
 };
@@ -97,13 +98,32 @@ export type UsernamePasswordInput = {
   username: Scalars['String']['input'];
 };
 
+export type UserPropsFragment = { __typename?: 'User', id: number, username: string };
+
+export type LoginMutationVariables = Exact<{
+  options: UsernamePasswordInput;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, username: string } | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string } | null };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -119,18 +139,56 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
-
-export const RegisterDocument = new TypedDocumentString(`
-    mutation Register($username: String!, $password: String!) {
-  register(options: {username: $username, password: $password}) {
+export const UserPropsFragmentDoc = new TypedDocumentString(`
+    fragment UserProps on User {
+  id
+  username
+}
+    `, {"fragmentName":"UserProps"}) as unknown as TypedDocumentString<UserPropsFragment, unknown>;
+export const LoginDocument = new TypedDocumentString(`
+    mutation Login($options: UsernamePasswordInput!) {
+  login(options: $options) {
+    user {
+      ...UserProps
+    }
     errors {
       field
       message
     }
+  }
+}
+    fragment UserProps on User {
+  id
+  username
+}`) as unknown as TypedDocumentString<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = new TypedDocumentString(`
+    mutation Logout {
+  logout
+}
+    `) as unknown as TypedDocumentString<LogoutMutation, LogoutMutationVariables>;
+export const RegisterDocument = new TypedDocumentString(`
+    mutation Register($username: String!, $password: String!) {
+  register(options: {username: $username, password: $password}) {
     user {
-      id
-      username
+      ...UserProps
+    }
+    errors {
+      field
+      message
     }
   }
 }
-    `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
+    fragment UserProps on User {
+  id
+  username
+}`) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
+export const MeDocument = new TypedDocumentString(`
+    query Me {
+  me {
+    ...UserProps
+  }
+}
+    fragment UserProps on User {
+  id
+  username
+}`) as unknown as TypedDocumentString<MeQuery, MeQueryVariables>;

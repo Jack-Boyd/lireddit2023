@@ -7,7 +7,7 @@ import express from "express";
 import cors from 'cors';
 import { buildSchema } from "type-graphql";
 
-import { __prod__ } from "./constants";
+import { COOKIE_NAME, __prod__ } from "./constants";
 import mikroOrmConfig from "./mikro-orm.config";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
@@ -41,10 +41,10 @@ const main = async () => {
         sameSite: 'lax',
         secure: __prod__,
       },
-      name: 'qid',
-      resave: false,
+      name: COOKIE_NAME,
       store: redisStore,
-      saveUninitialized: false,
+      saveUninitialized: true,
+      resave: false,
       secret: "theonepieceisrealyohohohohohoho",
     })
   );

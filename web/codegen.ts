@@ -10,6 +10,11 @@ const config: CodegenConfig = {
       preset: "client",
       config: {
         documentMode: "string",
+        dedupeFragments: true,
+      },
+      presetConfig: {
+        dedupeFragments: true,
+        fragmentMasking: false,
       },
       plugins: []
     }
